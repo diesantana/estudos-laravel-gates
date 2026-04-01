@@ -20,5 +20,19 @@
             {{-- conteúdo do post --}}
             <p>{{ $post->body }}</p>
         </div>
+
+        {{-- ==================================================== --}}
+        {{-- Habilita o botão de deketar post de acordo com o gate --}}
+        {{-- ==================================================== --}}
+        @can('delete-post', $post)
+            <div class="text-end">
+                <a href="#" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                    Deletar
+                </a>
+            </div>
+        @endcan
+        {{-- ==================================================== --}}
+        {{-- ==================================================== --}}
+
     </div>
 </div>
