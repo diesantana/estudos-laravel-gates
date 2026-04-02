@@ -1,4 +1,4 @@
-<div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+<div class="{{Auth::user()->id === $post->user_id ? "bg-blue-100" : "bg-white"}} overflow-hidden shadow-sm sm:rounded-lg">
     {{-- post card --}}
     <div class="p-6 text-gray-900">
         {{-- header card --}}
@@ -22,13 +22,15 @@
         </div>
 
         {{-- ==================================================== --}}
-        {{-- Habilita o botão de deketar post de acordo com o gate --}}
+        {{-- Habilita o botão de deletar post de acordo com o gate --}}
         {{-- ==================================================== --}}
         @can('delete-post', $post)
             <div class="text-end">
-                <a href="{{route('post.delete', ['id' => $post->id])}}" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
-                    Deletar
-                </a>
+                <form action="{{ route('post.destroy', $post->id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">Deletar</button>
+                </form>
             </div>
         @endcan
         {{-- ==================================================== --}}
