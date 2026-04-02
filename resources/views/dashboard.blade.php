@@ -21,7 +21,7 @@
             @forelse ($posts as $post)
                 <x-post-component :post='$post' />
             @empty
-                <p class="text-gray-900">Nennhum POST cadastrado!</p>
+                <p class="text-gray-500 font-500 text-center mt-5">Nennhum POST encontrado!</p>
             @endforelse
 
         </div>
