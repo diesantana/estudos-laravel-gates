@@ -18,6 +18,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/post/create', [MainController::class, 'create'])->name('post.create');
+    Route::post('/post', [MainController::class, 'store'])->name('post.store');
     Route::delete('/post/{id}', [MainController::class, 'destroy'])->name('post.destroy');
 });
 
