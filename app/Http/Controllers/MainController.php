@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -19,6 +20,9 @@ class MainController extends Controller
         return view('dashboard', ['posts' => $posts]);
     }
 
+    /**
+     * Renderiza o formulário e criação de posts
+     */
     public function create()
     {
         // Verifica se o user tem permissão
@@ -26,9 +30,49 @@ class MainController extends Controller
             abort(403, 'Você não tem permissão para criar um post');
         }
 
-        return 'Cria o post';
+        return view('posts.create');
     }
 
+    /**
+     *  Salva o novo post
+     */
+    public function store(Request $request)
+    {
+        // Validação
+        $request->validate(
+            [
+                'title' => 'required|min:3|max:100',
+                'body' => 'required|min:3|max:1000',
+            ],
+            [
+                'title.required' => 'O título é obrigatório',
+                'title.min' => 'O título não pode ser menor que 3 caracteres',
+                'title.max' => 'O título não pode ser maior que 100 caracteres',
+                'body.required' => 'O conteúdo do post é obrigatório',
+                'body.min' => 'O conteúdo do post não pode ser menor que 3 caracteres',
+                'body.max' => 'O  conteúdo do post não pode ser maior que 1000 caracteres',
+            ]
+        );
+
+        // Verifica se o user tem permissão
+        if (! Gate::allows('create-post')) {
+            abort(403, 'Você não tem permissão para criar um post');
+        }
+
+        // Salva o post
+        Post::create([
+            'title' => $request->title,
+            'body' => $request->body,
+            'user_id' => Auth::user()->id
+        ]);
+
+        // redireciona para o dashboard
+        return redirect()->route('dashboard');
+    }
+
+    /**
+     * Deleta um post
+     */
     public function destroy(int $id)
     {
         // Lança um erro 404 automaticamente se o post não for encontrado
