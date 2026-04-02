@@ -31,14 +31,19 @@ class MainController extends Controller
 
     public function destroy(int $id)
     {
-        // Busca o post
-        $post = Post::find($id);
+        // Lança um erro 404 automaticamente se o post não for encontrado
+        $post = Post::findOrFail($id);
 
         // Verifica se o user tem permissão
         if (! Gate::allows('delete-post', $post)) {
             abort(403, 'Você não tem permissão para deletar este post');
         }
 
-        return 'Deletar o post';
+        // deleta o post
+        $post->delete();
+
+        return redirect()->route('dashboard');
+        // redirecionando com uma mensagem
+        // return redirect()->route('dashboard')->with('success', 'Item excluído com sucesso');
     }
 }
